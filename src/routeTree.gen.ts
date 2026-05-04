@@ -9,38 +9,128 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WishingWellRouteImport } from './routes/wishing-well'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CourseCourseIdRouteImport } from './routes/course.$courseId'
+import { Route as ChatPeerIdRouteImport } from './routes/chat.$peerId'
 
+const WishingWellRoute = WishingWellRouteImport.update({
+  id: '/wishing-well',
+  path: '/wishing-well',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CourseCourseIdRoute = CourseCourseIdRouteImport.update({
+  id: '/course/$courseId',
+  path: '/course/$courseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatPeerIdRoute = ChatPeerIdRouteImport.update({
+  id: '/chat/$peerId',
+  path: '/chat/$peerId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
+  '/wishing-well': typeof WishingWellRoute
+  '/chat/$peerId': typeof ChatPeerIdRoute
+  '/course/$courseId': typeof CourseCourseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
+  '/wishing-well': typeof WishingWellRoute
+  '/chat/$peerId': typeof ChatPeerIdRoute
+  '/course/$courseId': typeof CourseCourseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
+  '/wishing-well': typeof WishingWellRoute
+  '/chat/$peerId': typeof ChatPeerIdRoute
+  '/course/$courseId': typeof CourseCourseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/profile'
+    | '/search'
+    | '/wishing-well'
+    | '/chat/$peerId'
+    | '/course/$courseId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/profile'
+    | '/search'
+    | '/wishing-well'
+    | '/chat/$peerId'
+    | '/course/$courseId'
+  id:
+    | '__root__'
+    | '/'
+    | '/profile'
+    | '/search'
+    | '/wishing-well'
+    | '/chat/$peerId'
+    | '/course/$courseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProfileRoute: typeof ProfileRoute
+  SearchRoute: typeof SearchRoute
+  WishingWellRoute: typeof WishingWellRoute
+  ChatPeerIdRoute: typeof ChatPeerIdRoute
+  CourseCourseIdRoute: typeof CourseCourseIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wishing-well': {
+      id: '/wishing-well'
+      path: '/wishing-well'
+      fullPath: '/wishing-well'
+      preLoaderRoute: typeof WishingWellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +138,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/course/$courseId': {
+      id: '/course/$courseId'
+      path: '/course/$courseId'
+      fullPath: '/course/$courseId'
+      preLoaderRoute: typeof CourseCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat/$peerId': {
+      id: '/chat/$peerId'
+      path: '/chat/$peerId'
+      fullPath: '/chat/$peerId'
+      preLoaderRoute: typeof ChatPeerIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProfileRoute: ProfileRoute,
+  SearchRoute: SearchRoute,
+  WishingWellRoute: WishingWellRoute,
+  ChatPeerIdRoute: ChatPeerIdRoute,
+  CourseCourseIdRoute: CourseCourseIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
