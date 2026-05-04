@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Fragment, type ReactNode } from "react";
 import { ShieldCheck, Mail, LogOut } from "lucide-react";
+
+const FragmentRow = ({ children }: { children: ReactNode }) => <Fragment>{children}</Fragment>;
 import { AppShell } from "@/components/AppShell";
 import { useAppStore, getCourse, appStore } from "@/store/app-store";
 
@@ -70,8 +73,8 @@ function ProfilePage() {
               <div key={d} className="py-1 text-center font-bold">週{d}</div>
             ))}
             {periods.map((p) => (
-              <>
-                <div key={`p${p}`} className="grid place-items-center text-muted-foreground">{p}</div>
+              <FragmentRow key={`row-${p}`}>
+                <div className="grid place-items-center text-muted-foreground">{p}</div>
                 {days.map((_, di) => {
                   const cell = grid[`${di}-${p}`];
                   return (
@@ -85,7 +88,7 @@ function ProfilePage() {
                     </div>
                   );
                 })}
-              </>
+              </FragmentRow>
             ))}
           </div>
         </div>
