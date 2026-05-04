@@ -147,7 +147,7 @@ function SwipeDeck() {
   );
 }
 
-function CardFace({ course, drag }: { course: ReturnType<typeof Object> extends never ? never : (typeof COURSES)[number]; drag: number }) {
+function CardFace({ course, drag }: { course: (typeof COURSES)[number]; drag: number }) {
   const fatigueColor =
     course.fatigueIndex === "輕鬆" ? "bg-success text-success-foreground"
     : course.fatigueIndex === "適中" ? "bg-success/70 text-success-foreground"
