@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { Heart, X, RotateCcw, GraduationCap } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { COURSES } from "@/data/courses";
@@ -63,25 +63,69 @@ function SwipeDeck() {
     [state.passed, state.wantIn]
   );
   const [drag, setDrag] = useState(0);
+  const [flying, setFlying] = useState<"like" | "pass" | null>(null);
   const startX = useRef<number | null>(null);
+  const dragging = useRef(false);
   const top = deck[0];
 
-  const finish = (dir: "like" | "pass") => {
-    if (!top) return;
-    if (dir === "like") appStore.likeCourse(top.id);
-    else appStore.passCourse(top.id);
-    setDrag(0);
+  const finish = useCallback(
+    (dir: "like" | "pass") => {
+      if (!top || flying) return;
+      setFlying(dir);
+      setTimeout(() => {
+        if (dir === "like") appStore.likeCourse(top.id);
+        else appStore.passCourse(top.id);
+        setDrag(0);
+        setFlying(null);
+      }, 260);
+    },
+    [top, flying],
+  );
+
+  // 全域 pointer 事件，避免手指/滑鼠移出卡片就斷開
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      if (!dragging.current || startX.current === null) return;
+      e.preventDefault();
+      setDrag(e.clientX - startX.current);
+    };
+    const onUp = () => {
+      if (!dragging.current) return;
+      dragging.current = false;
+      const d = (drag);
+      if (d > 70) finish("like");
+      else if (d < -70) finish("pass");
+      else setDrag(0);
+      startX.current = null;
+    };
+    window.addEventListener("pointermove", onMove, { passive: false });
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+    };
+  }, [drag, finish]);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (flying) return;
+    startX.current = e.clientX;
+    dragging.current = true;
   };
+
+  const flyX = flying === "like" ? 600 : flying === "pass" ? -600 : drag;
+  const isInteracting = dragging.current || flying !== null;
 
   return (
     <AppShell title="左滑略過 · 右滑想換進">
       <div className="px-5 pt-4">
         <div className="rounded-2xl bg-primary/8 p-3 text-center text-[12px] text-primary">
-          💡 滑卡只代表「想換進」，配對後才會通知對方
+          💡 拖曳卡片或點下方按鈕 · 配對後才會通知對方
         </div>
       </div>
 
-      <div className="relative mx-auto mt-6 h-[500px] w-[88%]">
+      <div className="relative mx-auto mt-6 h-[500px] w-[88%]" style={{ touchAction: "none" }}>
         {!top ? (
           <div className="grid h-full place-items-center rounded-3xl bg-card text-center shadow-[var(--shadow-card)]">
             <div>
@@ -105,19 +149,13 @@ function SwipeDeck() {
               />
             ))}
             <div
-              className="absolute inset-0 select-none rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] transition-transform"
+              className="absolute inset-0 cursor-grab touch-none select-none rounded-3xl bg-card p-6 shadow-[var(--shadow-card)] active:cursor-grabbing"
               style={{
-                transform: `translateX(${drag}px) rotate(${drag * 0.05}deg)`,
-                transition: startX.current === null ? "transform 0.3s ease" : "none",
+                transform: `translateX(${flyX}px) rotate(${flyX * 0.06}deg)`,
+                transition: isInteracting && !flying ? "none" : "transform 0.28s cubic-bezier(.2,.7,.3,1)",
+                opacity: flying ? 0 : 1,
               }}
-              onPointerDown={(e) => { startX.current = e.clientX; (e.target as HTMLElement).setPointerCapture(e.pointerId); }}
-              onPointerMove={(e) => { if (startX.current !== null) setDrag(e.clientX - startX.current); }}
-              onPointerUp={() => {
-                if (drag > 100) finish("like");
-                else if (drag < -100) finish("pass");
-                else setDrag(0);
-                startX.current = null;
-              }}
+              onPointerDown={onPointerDown}
             >
               <CardFace course={top} drag={drag} />
             </div>
