@@ -169,19 +169,26 @@ function CardFace({ course, drag }: { course: (typeof COURSES)[number]; drag: nu
       <div className="mt-6 grid grid-cols-2 gap-3">
         <Stat label="上課時間" value={course.time} />
         <Stat label="學分" value={`${course.credits} 學分`} />
-        <Stat label="剩餘名額" value={course.seatsLeft === 0 ? "已額滿" : `${course.seatsLeft} 位`} highlight={course.seatsLeft === 0} />
-        <Stat label="通過率" value={`${course.passRate}%`} />
+        <Stat label="🔥 想丟出" value={`${course.wantToDrop} 人`} highlight />
+        <Stat label="排隊換進" value={`${course.queueing} 人`} />
       </div>
 
       <div className="mt-5">
-        <p className="text-xs font-semibold text-muted-foreground">推薦標籤</p>
+        <p className="text-xs font-semibold text-muted-foreground">學生標籤</p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {course.tags.map((t) => (
             <span key={t} className="rounded-full bg-success/15 px-2.5 py-1 text-[12px] font-semibold text-success">
-              #{t}
+              {t}
             </span>
           ))}
         </div>
+      </div>
+
+      <div className="mt-4 rounded-xl bg-background/60 p-3 text-[11px]">
+        <p className="text-muted-foreground">目前持有這門課的同學</p>
+        <p className="mt-1 font-semibold text-foreground/85">
+          {course.holders.map((h) => h.nickname).join("、")}
+        </p>
       </div>
 
       <div className="mt-auto flex items-center justify-between text-[11px] text-muted-foreground">

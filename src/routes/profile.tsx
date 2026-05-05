@@ -1,55 +1,50 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Fragment, type ReactNode } from "react";
-import { ShieldCheck, Mail, LogOut } from "lucide-react";
-
-const FragmentRow = ({ children }: { children: ReactNode }) => <Fragment>{children}</Fragment>;
+import { ShieldCheck, Mail, LogOut, AlertTriangle } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useAppStore, getCourse, appStore } from "@/store/app-store";
+import { detectConflicts, parseSlot, DAY_NAMES, type Course } from "@/data/courses";
+
+const FragmentRow = ({ children }: { children: ReactNode }) => <Fragment>{children}</Fragment>;
 
 export const Route = createFileRoute("/profile")({
   head: () => ({ meta: [{ title: "個人課表 · 愛珍課" }] }),
   component: ProfilePage,
 });
 
-const days = ["一", "二", "三", "四", "五"];
+const days = DAY_NAMES;
 const periods = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-function parseSlot(time: string): { day: number; periods: number[] } | null {
-  const m = time.match(/週(.)\s*([\d\-]+)\s*節/);
-  if (!m) return null;
-  const day = days.indexOf(m[1]);
-  if (day < 0) return null;
-  const parts = m[2].split("-").map((s) => parseInt(s));
-  let ps: number[] = [];
-  if (parts.length === 1) ps = [parts[0]];
-  else if (parts.length === 2) {
-    for (let i = parts[0]; i <= parts[1]; i++) ps.push(i);
-  } else ps = parts;
-  return { day, periods: ps };
-}
 
 function ProfilePage() {
   const state = useAppStore();
-  const courses = state.schedule.map(getCourse).filter(Boolean);
+  const courses = state.schedule.map(getCourse).filter((c): c is Course => Boolean(c));
+  const conflicts = detectConflicts(courses);
 
-  const grid: Record<string, { id: string; name: string } | null> = {};
+  // build grid; mark cells with conflicts
+  const grid: Record<string, { id: string; name: string; conflict: boolean } | null> = {};
+  const conflictKeys = new Set<string>();
+  for (const cf of conflicts) {
+    for (const p of cf.periods) conflictKeys.add(`${cf.day}-${p}`);
+  }
   for (const c of courses) {
-    if (!c) continue;
     const slot = parseSlot(c.time);
     if (!slot) continue;
-    for (const p of slot.periods) grid[`${slot.day}-${p}`] = { id: c.id, name: c.name };
+    for (const p of slot.periods) {
+      const key = `${slot.day}-${p}`;
+      grid[key] = { id: c.id, name: c.name, conflict: conflictKeys.has(key) };
+    }
   }
 
-  const totalCredits = courses.reduce((s, c) => s + (c?.credits ?? 0), 0);
+  const totalCredits = courses.reduce((s, c) => s + c.credits, 0);
 
   return (
     <AppShell title="個人課表 · 換課結果預覽">
       <div className="space-y-4 px-5 pt-5">
-        <div className="rounded-2xl bg-card p-5 shadow-[var(--shadow-soft)]">
+        <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-soft)]">
           <div className="flex items-center gap-3">
-            <div className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground font-bold">學</div>
+            <div className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground font-bold">明</div>
             <div className="flex-1">
-              <p className="text-base font-bold">學生 · Demo</p>
+              <p className="text-base font-bold">資傳二甲 · 小明</p>
               <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
                 <Mail className="h-3 w-3" /> student@mail.shu.edu.tw
               </p>
@@ -65,7 +60,38 @@ function ProfilePage() {
           </div>
         </div>
 
-        <div className="rounded-2xl bg-card p-3 shadow-[var(--shadow-soft)]">
+        {conflicts.length > 0 && (
+          <div className="rounded-3xl border-2 border-primary bg-primary/10 p-4 shadow-[var(--shadow-soft)] animate-pulse">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-primary" />
+              <h3 className="text-sm font-extrabold text-primary">⚠ 偵測到 {conflicts.length} 組衝堂！</h3>
+            </div>
+            <ul className="mt-3 space-y-2">
+              {conflicts.map((cf, i) => (
+                <li key={i} className="rounded-xl bg-card p-3 text-xs">
+                  <p className="font-bold text-primary">
+                    週{days[cf.day]} 第 {cf.periods.join("、")} 節
+                  </p>
+                  <p className="mt-1 text-foreground/80">
+                    <span className="font-semibold">{cf.a.name}</span>
+                    <span className="mx-1.5 text-primary">⇄</span>
+                    <span className="font-semibold">{cf.b.name}</span>
+                  </p>
+                  <div className="mt-2 flex gap-2">
+                    <button onClick={() => appStore.removeFromSchedule(cf.a.id)} className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-primary-foreground">
+                      移除「{cf.a.name}」
+                    </button>
+                    <button onClick={() => appStore.removeFromSchedule(cf.b.id)} className="rounded-full bg-primary/80 px-3 py-1 text-[11px] font-semibold text-primary-foreground">
+                      移除「{cf.b.name}」
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="rounded-3xl bg-card p-3 shadow-[var(--shadow-soft)]">
           <h3 className="px-2 pb-2 text-sm font-bold">本學期課表</h3>
           <div className="grid grid-cols-[28px_repeat(5,1fr)] gap-1 text-[10px]">
             <div />
@@ -81,7 +107,11 @@ function ProfilePage() {
                     <div
                       key={`${di}-${p}`}
                       className={`min-h-[36px] rounded-md p-1 leading-tight ${
-                        cell ? "bg-success/85 text-success-foreground font-semibold" : "bg-background/40"
+                        cell
+                          ? cell.conflict
+                            ? "bg-primary text-primary-foreground font-semibold ring-2 ring-primary/60 animate-pulse"
+                            : "bg-success/85 text-success-foreground font-semibold"
+                          : "bg-background/40"
                       }`}
                     >
                       {cell?.name.slice(0, 4)}
@@ -91,12 +121,15 @@ function ProfilePage() {
               </FragmentRow>
             ))}
           </div>
+          {conflicts.length > 0 && (
+            <p className="px-2 pt-2 text-[10px] text-primary">紅色格子 = 衝堂時段</p>
+          )}
         </div>
 
-        <div className="rounded-2xl bg-card p-4 shadow-[var(--shadow-soft)]">
+        <div className="rounded-3xl bg-card p-4 shadow-[var(--shadow-soft)]">
           <h3 className="text-sm font-bold">已加入課程</h3>
           <ul className="mt-2 space-y-2">
-            {courses.map((c) => c && (
+            {courses.map((c) => (
               <li key={c.id} className="flex items-center justify-between rounded-xl bg-background/50 p-3">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-primary">{c.name}</p>
