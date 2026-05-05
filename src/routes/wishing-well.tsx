@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
 import { Sparkles, ArrowRightLeft, MessageCircle, X } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { Confetti } from "@/components/Confetti";
 import { COURSES } from "@/data/courses";
 import { appStore, useAppStore, getCourse } from "@/store/app-store";
 
