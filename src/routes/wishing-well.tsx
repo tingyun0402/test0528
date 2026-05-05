@@ -100,6 +100,7 @@ function WishingWell() {
         </div>
       </div>
 
+      <Confetti active={!!matched} />
       {matched && (
         <MatchModal
           peer={matched}
