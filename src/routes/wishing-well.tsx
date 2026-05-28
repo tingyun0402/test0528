@@ -3,8 +3,8 @@ import { useMemo, useState, useEffect } from "react";
 import { Sparkles, ArrowRightLeft, MessageCircle, X } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Confetti } from "@/components/Confetti";
-import { COURSES } from "@/data/courses";
 import { appStore, useAppStore, getCourse } from "@/store/app-store";
+
 
 export const Route = createFileRoute("/wishing-well")({
   head: () => ({ meta: [{ title: "許願池 · 愛珍課" }] }),
