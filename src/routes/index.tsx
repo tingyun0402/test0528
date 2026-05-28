@@ -11,10 +11,11 @@ export const Route = createFileRoute("/")({
 });
 
 function SwipeHome() {
-  const [authed, setAuthed] = useState(false);
-  if (!authed) return <LoginGate onPass={() => setAuthed(true)} />;
+  const state = useAppStore();
+  if (!state.authed) return <LoginGate onPass={() => appStore.setAuthed(true)} />;
   return <SwipeDeck />;
 }
+
 
 function LoginGate({ onPass }: { onPass: () => void }) {
   const [email, setEmail] = useState("");
