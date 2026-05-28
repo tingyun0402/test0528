@@ -1,5 +1,7 @@
 export type Holder = { nickname: string; dept: string };
 
+export type CourseKind = "必修" | "選修" | "通識";
+
 export type Course = {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export type Course = {
   department: string;
   credits: number;
   time: string;
+  kind: CourseKind;       // 必修 / 選修 / 通識（只有通識可被換）
   fatigueIndex: "輕鬆" | "適中" | "重度";
   fatigueScore: number; // 1-10
   tags: string[];        // 學生定義 #甜課 #不點名 ...
@@ -25,7 +28,7 @@ export type Course = {
 export const COURSES: Course[] = [
   {
     id: "c1", name: "網站規劃與設計", professor: "李明哲", department: "資傳系",
-    credits: 3, time: "週二 3-4 節", fatigueIndex: "適中", fatigueScore: 6,
+    credits: 3, time: "週二 3-4 節", kind: "通識", fatigueIndex: "適中", fatigueScore: 6,
     tags: ["#實作課", "#作品集加分", "#會被罵但學得多"],
     needsGroup: true, hasReport: true, needsExtraFee: false,
     passRate: 92, failRate: 3,
@@ -38,7 +41,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c2", name: "採訪寫作", professor: "陳雅琳", department: "新聞系",
-    credits: 3, time: "週三 5-6 節", fatigueIndex: "重度", fatigueScore: 9,
+    credits: 3, time: "週三 5-6 節", kind: "通識", fatigueIndex: "重度", fatigueScore: 9,
     tags: ["#實戰", "#外出採訪", "#不點名但作業海"],
     needsGroup: false, hasReport: true, needsExtraFee: false,
     passRate: 85, failRate: 5,
@@ -48,7 +51,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c3", name: "口語傳播", professor: "游梓翔", department: "口傳系",
-    credits: 2, time: "週一 2 節", fatigueIndex: "輕鬆", fatigueScore: 3,
+    credits: 2, time: "週一 2 節", kind: "通識", fatigueIndex: "輕鬆", fatigueScore: 3,
     tags: ["#甜課", "#好過", "#會練口才"],
     needsGroup: false, hasReport: false, needsExtraFee: false,
     passRate: 98, failRate: 0,
@@ -58,7 +61,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c4", name: "數位攝影", professor: "張志成", department: "圖傳系",
-    credits: 3, time: "週四 6-7 節", fatigueIndex: "適中", fatigueScore: 6,
+    credits: 3, time: "週四 6-7 節", kind: "通識", fatigueIndex: "適中", fatigueScore: 6,
     tags: ["#需自備相機", "#拍照打卡"],
     needsGroup: false, hasReport: true, needsExtraFee: true,
     passRate: 90, failRate: 4,
@@ -68,7 +71,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c5", name: "微電影製作", professor: "林俊宏", department: "廣電系",
-    credits: 3, time: "週五 7-8-9 節", fatigueIndex: "重度", fatigueScore: 10,
+    credits: 3, time: "週五 7-8-9 節", kind: "通識", fatigueIndex: "重度", fatigueScore: 10,
     tags: ["#分組地獄", "#成果發表", "#拍片熬夜"],
     needsGroup: true, hasReport: true, needsExtraFee: true,
     passRate: 80, failRate: 8,
@@ -78,7 +81,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c6", name: "公共關係概論", professor: "黃佳音", department: "公廣系",
-    credits: 2, time: "週三 3 節", fatigueIndex: "輕鬆", fatigueScore: 2,
+    credits: 2, time: "週三 3 節", kind: "通識", fatigueIndex: "輕鬆", fatigueScore: 2,
     tags: ["#甜課", "#不點名", "#老師超幽默"],
     needsGroup: false, hasReport: false, needsExtraFee: false,
     passRate: 96, failRate: 1,
@@ -88,7 +91,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c7", name: "廣告創意策略", professor: "吳承翰", department: "公廣系",
-    credits: 3, time: "週二 6-7 節", fatigueIndex: "適中", fatigueScore: 7,
+    credits: 3, time: "週二 6-7 節", kind: "通識", fatigueIndex: "適中", fatigueScore: 7,
     tags: ["#腦力激盪", "#提案", "#分組重"],
     needsGroup: true, hasReport: true, needsExtraFee: false,
     passRate: 88, failRate: 4,
@@ -98,7 +101,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c8", name: "社群媒體經營", professor: "謝宛庭", department: "傳管系",
-    credits: 2, time: "週四 3-4 節", fatigueIndex: "輕鬆", fatigueScore: 3,
+    credits: 2, time: "週四 3-4 節", kind: "通識", fatigueIndex: "輕鬆", fatigueScore: 3,
     tags: ["#實用", "#IG案例", "#不用考試"],
     needsGroup: false, hasReport: true, needsExtraFee: false,
     passRate: 94, failRate: 2,
@@ -108,7 +111,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c9", name: "影視美學賞析", professor: "趙家瑜", department: "通識中心",
-    credits: 2, time: "週一 6-7 節", fatigueIndex: "輕鬆", fatigueScore: 1,
+    credits: 2, time: "週一 6-7 節", kind: "通識", fatigueIndex: "輕鬆", fatigueScore: 1,
     tags: ["#看電影", "#通識神課", "#寫心得"],
     needsGroup: false, hasReport: false, needsExtraFee: false,
     passRate: 99, failRate: 0,
@@ -118,7 +121,7 @@ export const COURSES: Course[] = [
   },
   {
     id: "c10", name: "資料新聞學", professor: "周品妤", department: "新聞系",
-    credits: 3, time: "週五 3-4 節", fatigueIndex: "重度", fatigueScore: 8,
+    credits: 3, time: "週五 3-4 節", kind: "通識", fatigueIndex: "重度", fatigueScore: 8,
     tags: ["#寫程式", "#資料分析", "#文組崩潰"],
     needsGroup: true, hasReport: true, needsExtraFee: false,
     passRate: 78, failRate: 10,
@@ -126,7 +129,46 @@ export const COURSES: Course[] = [
     holders: [{ nickname: "新聞三甲思妤", dept: "新聞系" }],
     reviews: [{ author: "新聞大三", text: "需要學 Python，但很潮。", rating: 4 }],
   },
+  // 我手上的必修課（系上規定，不可換）
+  {
+    id: "m1", name: "傳播理論", professor: "胡光夏", department: "資傳系",
+    credits: 3, time: "週一 3-4 節", kind: "必修", fatigueIndex: "適中", fatigueScore: 6,
+    tags: ["#必修", "#要讀原文"],
+    needsGroup: false, hasReport: true, needsExtraFee: false,
+    passRate: 90, failRate: 4, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
+  {
+    id: "m2", name: "計算機概論", professor: "王國川", department: "資傳系",
+    credits: 3, time: "週二 7-8 節", kind: "必修", fatigueIndex: "適中", fatigueScore: 5,
+    tags: ["#必修", "#寫程式"],
+    needsGroup: false, hasReport: false, needsExtraFee: false,
+    passRate: 88, failRate: 5, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
+  {
+    id: "m3", name: "大一英文", professor: "Sarah Wu", department: "通識中心",
+    credits: 2, time: "週四 1-2 節", kind: "必修", fatigueIndex: "輕鬆", fatigueScore: 4,
+    tags: ["#必修", "#分組報告"],
+    needsGroup: true, hasReport: true, needsExtraFee: false,
+    passRate: 95, failRate: 1, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
+  // 我手上的選修課（系內選修）
+  {
+    id: "e1", name: "互動媒體設計", professor: "陳柏全", department: "資傳系",
+    credits: 3, time: "週三 7-8 節", kind: "選修", fatigueIndex: "適中", fatigueScore: 6,
+    tags: ["#選修", "#實作"],
+    needsGroup: true, hasReport: true, needsExtraFee: false,
+    passRate: 92, failRate: 2, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
 ];
+
+// 我目前手上的課（必修 + 選修 + 一堂通識）
+export const OWNED_COURSE_IDS = ["m1", "m2", "m3", "e1", "c3"];
+
+
 
 // 解析「週X N-N 節」為 { day: 0-4, periods: number[] }
 const DAYS = ["一", "二", "三", "四", "五"];

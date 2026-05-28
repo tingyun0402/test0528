@@ -129,16 +129,30 @@ function ProfilePage() {
         <div className="rounded-3xl bg-card p-4 shadow-[var(--shadow-soft)]">
           <h3 className="text-sm font-bold">已加入課程</h3>
           <ul className="mt-2 space-y-2">
-            {courses.map((c) => (
-              <li key={c.id} className="flex items-center justify-between rounded-xl bg-background/50 p-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-primary">{c.name}</p>
-                  <p className="text-[11px] text-muted-foreground">{c.time} · {c.credits} 學分</p>
-                </div>
-                <button onClick={() => appStore.removeFromSchedule(c.id)} className="text-[11px] text-primary underline">移除</button>
-              </li>
-            ))}
+            {courses.map((c) => {
+              const kindColor =
+                c.kind === "必修" ? "bg-primary text-primary-foreground"
+                : c.kind === "選修" ? "bg-success/80 text-success-foreground"
+                : "bg-muted text-foreground/70";
+              return (
+                <li key={c.id} className="flex items-center justify-between rounded-xl bg-background/50 p-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold ${kindColor}`}>{c.kind}</span>
+                      <p className="truncate text-sm font-bold text-primary">{c.name}</p>
+                    </div>
+                    <p className="mt-0.5 text-[11px] text-muted-foreground">{c.time} · {c.credits} 學分</p>
+                  </div>
+                  {c.kind === "通識" ? (
+                    <button onClick={() => appStore.removeFromSchedule(c.id)} className="text-[11px] text-primary underline">移除</button>
+                  ) : (
+                    <span className="text-[10px] text-muted-foreground">不可換</span>
+                  )}
+                </li>
+              );
+            })}
             {courses.length === 0 && <p className="py-3 text-center text-xs text-muted-foreground">尚未加入課程</p>}
+
           </ul>
         </div>
 

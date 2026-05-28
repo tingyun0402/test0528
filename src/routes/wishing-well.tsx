@@ -3,8 +3,8 @@ import { useMemo, useState, useEffect } from "react";
 import { Sparkles, ArrowRightLeft, MessageCircle, X } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Confetti } from "@/components/Confetti";
-import { COURSES } from "@/data/courses";
 import { appStore, useAppStore, getCourse } from "@/store/app-store";
+
 
 export const Route = createFileRoute("/wishing-well")({
   head: () => ({ meta: [{ title: "許願池 · 愛珍課" }] }),
@@ -52,19 +52,31 @@ function WishingWell() {
         />
 
         <div>
-          <h3 className="mb-2 px-1 text-sm font-bold">新增可換出的課程</h3>
+          <h3 className="mb-1 px-1 text-sm font-bold">新增可換出的課程</h3>
+          <p className="mb-2 px-1 text-[11px] text-muted-foreground">只顯示你手上的通識課（必修/選修不可換）</p>
           <div className="flex gap-2 overflow-x-auto pb-2">
-            {COURSES.filter((c) => !state.wantOut.includes(c.id)).slice(0, 6).map((c) => (
-              <button
-                key={c.id}
-                onClick={() => appStore.toggleWantOut(c.id)}
-                className="shrink-0 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium"
-              >
-                + {c.name}
-              </button>
-            ))}
+            {state.schedule
+              .map(getCourse)
+              .filter((c): c is NonNullable<ReturnType<typeof getCourse>> =>
+                Boolean(c) && c!.kind === "通識" && !state.wantOut.includes(c!.id))
+              .map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => appStore.toggleWantOut(c.id)}
+                  className="shrink-0 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium"
+                >
+                  + {c.name}
+                </button>
+              ))}
+            {state.schedule
+              .map(getCourse)
+              .filter((c) => c && c.kind === "通識" && !state.wantOut.includes(c.id))
+              .length === 0 && (
+              <p className="text-[11px] text-muted-foreground">手上的通識課都已加入</p>
+            )}
           </div>
         </div>
+
 
         <Section
           title="我想換進"
