@@ -129,7 +129,46 @@ export const COURSES: Course[] = [
     holders: [{ nickname: "新聞三甲思妤", dept: "新聞系" }],
     reviews: [{ author: "新聞大三", text: "需要學 Python，但很潮。", rating: 4 }],
   },
+  // 我手上的必修課（系上規定，不可換）
+  {
+    id: "m1", name: "傳播理論", professor: "胡光夏", department: "資傳系",
+    credits: 3, time: "週一 3-4 節", kind: "必修", fatigueIndex: "適中", fatigueScore: 6,
+    tags: ["#必修", "#要讀原文"],
+    needsGroup: false, hasReport: true, needsExtraFee: false,
+    passRate: 90, failRate: 4, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
+  {
+    id: "m2", name: "計算機概論", professor: "王國川", department: "資傳系",
+    credits: 3, time: "週二 7-8 節", kind: "必修", fatigueIndex: "適中", fatigueScore: 5,
+    tags: ["#必修", "#寫程式"],
+    needsGroup: false, hasReport: false, needsExtraFee: false,
+    passRate: 88, failRate: 5, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
+  {
+    id: "m3", name: "大一英文", professor: "Sarah Wu", department: "通識中心",
+    credits: 2, time: "週四 1-2 節", kind: "必修", fatigueIndex: "輕鬆", fatigueScore: 4,
+    tags: ["#必修", "#分組報告"],
+    needsGroup: true, hasReport: true, needsExtraFee: false,
+    passRate: 95, failRate: 1, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
+  // 我手上的選修課（系內選修）
+  {
+    id: "e1", name: "互動媒體設計", professor: "陳柏全", department: "資傳系",
+    credits: 3, time: "週三 7-8 節", kind: "選修", fatigueIndex: "適中", fatigueScore: 6,
+    tags: ["#選修", "#實作"],
+    needsGroup: true, hasReport: true, needsExtraFee: false,
+    passRate: 92, failRate: 2, wantToDrop: 0, queueing: 0,
+    holders: [{ nickname: "資傳二甲小明", dept: "資傳系" }], reviews: [],
+  },
 ];
+
+// 我目前手上的課（必修 + 選修 + 一堂通識）
+export const OWNED_COURSE_IDS = ["m1", "m2", "m3", "e1", "c3"];
+
+
 
 // 解析「週X N-N 節」為 { day: 0-4, periods: number[] }
 const DAYS = ["一", "二", "三", "四", "五"];
