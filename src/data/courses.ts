@@ -1,5 +1,7 @@
 export type Holder = { nickname: string; dept: string };
 
+export type CourseKind = "必修" | "選修" | "通識";
+
 export type Course = {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export type Course = {
   department: string;
   credits: number;
   time: string;
+  kind: CourseKind;       // 必修 / 選修 / 通識（只有通識可被換）
   fatigueIndex: "輕鬆" | "適中" | "重度";
   fatigueScore: number; // 1-10
   tags: string[];        // 學生定義 #甜課 #不點名 ...
