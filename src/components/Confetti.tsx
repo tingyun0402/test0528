@@ -4,9 +4,9 @@ type Piece = { id: number; left: number; delay: number; color: string; rotate: n
 
 const COLORS = [
   "var(--primary)",    // 深藍
-  "var(--success)",    // 青黃
-  "oklch(0.88 0.05 170)",   // 薄荷綠
-  "oklch(0.94 0.015 220)",  // 淺天藍
+  "var(--success)",    // 鮮綠
+  "oklch(0.91 0.04 160)",   // 薄荷綠
+  "oklch(0.82 0.02 220)",   // 淺藍白
 ];
 
 export function Confetti({ active, duration = 2200 }: { active: boolean; duration?: number }) {

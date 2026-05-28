@@ -23,7 +23,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
       { title: "愛珍課 - 世新大學換課輔助平台" },
       { name: "description", content: "世新大學專屬安全換課平台，左滑右滑配對你想要的課程，告別退選風險。" },
-      { name: "theme-color", content: "#daf5f7" },
+      { name: "theme-color", content: "#f7fbff" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
