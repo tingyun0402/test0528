@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 type Piece = { id: number; left: number; delay: number; color: string; rotate: number };
 
 const COLORS = [
-  "var(--primary)",
-  "var(--success)",
-  "oklch(0.842 0.073 95)",   // tan
-  "oklch(0.901 0.034 38)",   // champagne
+  "var(--primary)",    // 深藍
+  "var(--success)",    // 青黃
+  "oklch(0.88 0.05 170)",   // 薄荷綠
+  "oklch(0.94 0.015 220)",  // 淺天藍
 ];
 
 export function Confetti({ active, duration = 2200 }: { active: boolean; duration?: number }) {
