@@ -1,18 +1,21 @@
 import { useSyncExternalStore } from "react";
-import { COURSES, type Course } from "@/data/courses";
+import { COURSES, OWNED_COURSE_IDS, type Course } from "@/data/courses";
 
 type State = {
+  authed: boolean;
   wantIn: string[];        // course ids 我想換進
   wantOut: string[];       // course ids 我想換出
   passed: string[];        // 已略過
-  schedule: string[];      // 已加入課表
+  schedule: string[];      // 已加入課表（包含必修/選修/通識）
 };
 
 const initial: State = {
+  authed: false,
   wantIn: [],
-  wantOut: ["c3"], // demo: user currently has 傳播理論 想換出
+  wantOut: [],
   passed: [],
-  schedule: ["c3"],
+  // 預設手上有必修+選修+一堂通識
+  schedule: [...OWNED_COURSE_IDS],
 };
 
 let state: State = { ...initial };
@@ -22,6 +25,7 @@ const emit = () => listeners.forEach((l) => l());
 export const appStore = {
   get: () => state,
   subscribe: (l: () => void) => { listeners.add(l); return () => listeners.delete(l); },
+  setAuthed: (v: boolean) => { state = { ...state, authed: v }; emit(); },
   likeCourse: (id: string) => {
     if (!state.wantIn.includes(id)) state.wantIn = [...state.wantIn, id];
     emit();
