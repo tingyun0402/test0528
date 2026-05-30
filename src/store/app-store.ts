@@ -11,8 +11,10 @@ type State = {
 
 const initial: State = {
   authed: false,
-  wantIn: [],
-  wantOut: [],
+  // Demo: 預設想換進「網站規劃與設計(c1)」、想換出手上的「口語傳播(c3)」
+  // 對應 wishing-well 中 mock 同學「小新」(out: c1, in: c3) → 立即觸發配對成功
+  wantIn: ["c1"],
+  wantOut: ["c3"],
   passed: [],
   // 預設手上有必修+選修+一堂通識
   schedule: [...OWNED_COURSE_IDS],
