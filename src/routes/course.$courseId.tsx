@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { ChevronLeft, Plus, Heart } from "lucide-react";
+import { ChevronLeft, Repeat, Bookmark } from "lucide-react";
 import { getCourse, appStore, useAppStore } from "@/store/app-store";
 
 export const Route = createFileRoute("/course/$courseId")({
@@ -24,7 +24,7 @@ function CourseDetail() {
     );
   }
 
-  const inSchedule = state.schedule.includes(c.id);
+  const wantingOut = state.wantOut.includes(c.id);
   const wanted = state.wantIn.includes(c.id);
 
   return (
@@ -88,17 +88,19 @@ function CourseDetail() {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => appStore.toggleWantIn(c.id)}
-              className={`rounded-xl py-3 text-sm font-semibold ${
+              className={`rounded-xl py-3 text-sm font-semibold transition-transform duration-100 active:scale-95 active:brightness-95 ${
                 wanted ? "bg-success text-success-foreground" : "bg-card text-primary border border-primary"
               }`}
             >
-              <Heart className="mr-1 inline h-4 w-4" />{wanted ? "已加入想換進" : "加入想換進"}
+              <Bookmark className="mr-1 inline h-4 w-4" />{wanted ? "已收藏" : "收藏 / 考慮"}
             </button>
             <button
-              onClick={() => inSchedule ? appStore.removeFromSchedule(c.id) : appStore.addToSchedule(c.id)}
-              className="rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground"
+              onClick={() => appStore.toggleWantOut(c.id)}
+              className={`rounded-xl py-3 text-sm font-semibold text-primary-foreground transition-transform duration-100 active:scale-95 active:brightness-110 ${
+                wantingOut ? "bg-success" : "bg-primary"
+              }`}
             >
-              <Plus className="mr-1 inline h-4 w-4" />{inSchedule ? "移出課表" : "加入課表"}
+              <Repeat className="mr-1 inline h-4 w-4" />{wantingOut ? "已加入換課清單" : "加入換課清單"}
             </button>
           </div>
         </div>
