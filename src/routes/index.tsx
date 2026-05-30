@@ -180,14 +180,14 @@ function SwipeDeck() {
         <div className="mt-6 flex justify-center gap-8">
           <button
             onClick={() => finish("pass")}
-            className="grid h-14 w-14 place-items-center rounded-full bg-card text-primary shadow-[var(--shadow-soft)]"
+            className="grid h-14 w-14 place-items-center rounded-full bg-card text-primary shadow-[var(--shadow-soft)] transition-transform duration-100 active:scale-90 active:shadow-inner active:brightness-95"
             aria-label="略過"
           >
             <X className="h-6 w-6" />
           </button>
           <button
             onClick={() => finish("like")}
-            className="grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-card)]"
+            className="grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-card)] transition-transform duration-100 active:scale-90 active:brightness-110"
             aria-label="想換進"
           >
             <Heart className="h-6 w-6 fill-current" />
