@@ -1,6 +1,8 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, Send, ShieldAlert } from "lucide-react";
+import { ChevronLeft, Send, ShieldAlert, Loader2 } from "lucide-react";
+import { chatReply } from "@/lib/chat.functions";
 
 export const Route = createFileRoute("/chat/$peerId")({
   head: () => ({ meta: [{ title: "聊天 · 愛珍課" }] }),
@@ -14,21 +16,37 @@ type Msg = { from: "me" | "peer"; text: string; warn?: boolean };
 function Chat() {
   const { peerId } = Route.useParams();
   const router = useRouter();
+  const reply = useServerFn(chatReply);
   const [msgs, setMsgs] = useState<Msg[]>([
     { from: "peer", text: `嗨！我是 ${peerId}，看到我們配對成功，方便聊聊換課流程嗎？` },
   ]);
   const [text, setText] = useState("");
+  const [pending, setPending] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, pending]);
 
-  const send = () => {
-    if (!text.trim()) return;
-    const warn = FORBIDDEN.some((k) => text.includes(k));
-    setMsgs((m) => [...m, { from: "me", text, warn }]);
+  const send = async () => {
+    const value = text.trim();
+    if (!value || pending) return;
+    const warn = FORBIDDEN.some((k) => value.includes(k));
+    const nextMsgs: Msg[] = [...msgs, { from: "me", text: value, warn }];
+    setMsgs(nextMsgs);
     setText("");
-    if (!warn) {
-      setTimeout(() => setMsgs((m) => [...m, { from: "peer", text: "好啊！我們約禮拜一一起去選課系統操作？" }]), 800);
+    if (warn) return;
+
+    setPending(true);
+    try {
+      const history = nextMsgs.map((m) => ({
+        role: m.from === "me" ? ("user" as const) : ("assistant" as const),
+        content: m.text,
+      }));
+      const { text: aiText } = await reply({ data: { messages: history, peerName: peerId } });
+      setMsgs((m) => [...m, { from: "peer", text: aiText }]);
+    } catch (e) {
+      setMsgs((m) => [...m, { from: "peer", text: "（AI 暫時無法回覆，等等再試試～）" }]);
+    } finally {
+      setPending(false);
     }
   };
 
@@ -36,7 +54,7 @@ function Chat() {
     <div className="min-h-screen w-full" style={{ background: "var(--gradient-warm)" }}>
       <div className="mx-auto flex min-h-screen w-full max-w-md flex-col">
         <header className="flex items-center gap-3 border-b border-border/60 bg-background/85 px-4 py-3 backdrop-blur">
-          <button onClick={() => router.history.back()} className="rounded-full p-1.5 hover:bg-card">
+          <button onClick={() => router.history.back()} className="rounded-full p-1.5 transition active:scale-90 active:bg-card">
             <ChevronLeft className="h-5 w-5" />
           </button>
           <div className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground font-bold">
@@ -44,7 +62,7 @@ function Chat() {
           </div>
           <div>
             <h1 className="text-sm font-bold">{peerId}</h1>
-            <p className="text-[10px] text-success">已實名 · 配對中</p>
+            <p className="text-[10px] text-success">AI 模擬 · 配對中</p>
           </div>
         </header>
 
@@ -68,6 +86,13 @@ function Chat() {
               </div>
             </div>
           ))}
+          {pending && (
+            <div className="flex justify-start">
+              <div className="flex items-center gap-2 rounded-2xl bg-card px-3 py-2 text-sm text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />輸入中...
+              </div>
+            </div>
+          )}
           <div ref={endRef} />
         </div>
 
@@ -80,8 +105,12 @@ function Chat() {
               placeholder="輸入訊息..."
               className="flex-1 bg-transparent py-2 text-sm outline-none"
             />
-            <button onClick={send} className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground">
-              <Send className="h-4 w-4" />
+            <button
+              onClick={send}
+              disabled={pending || !text.trim()}
+              className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground transition active:scale-90 active:brightness-110 disabled:opacity-50"
+            >
+              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </button>
           </div>
         </div>
