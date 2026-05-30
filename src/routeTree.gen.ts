@@ -15,6 +15,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CourseCourseIdRouteImport } from './routes/course.$courseId'
 import { Route as ChatPeerIdRouteImport } from './routes/chat.$peerId'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const WishingWellRoute = WishingWellRouteImport.update({
   id: '/wishing-well',
@@ -46,12 +47,18 @@ const ChatPeerIdRoute = ChatPeerIdRouteImport.update({
   path: '/chat/$peerId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
   '/wishing-well': typeof WishingWellRoute
+  '/api/chat': typeof ApiChatRoute
   '/chat/$peerId': typeof ChatPeerIdRoute
   '/course/$courseId': typeof CourseCourseIdRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
   '/wishing-well': typeof WishingWellRoute
+  '/api/chat': typeof ApiChatRoute
   '/chat/$peerId': typeof ChatPeerIdRoute
   '/course/$courseId': typeof CourseCourseIdRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
   '/wishing-well': typeof WishingWellRoute
+  '/api/chat': typeof ApiChatRoute
   '/chat/$peerId': typeof ChatPeerIdRoute
   '/course/$courseId': typeof CourseCourseIdRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/search'
     | '/wishing-well'
+    | '/api/chat'
     | '/chat/$peerId'
     | '/course/$courseId'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/search'
     | '/wishing-well'
+    | '/api/chat'
     | '/chat/$peerId'
     | '/course/$courseId'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/search'
     | '/wishing-well'
+    | '/api/chat'
     | '/chat/$peerId'
     | '/course/$courseId'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   SearchRoute: typeof SearchRoute
   WishingWellRoute: typeof WishingWellRoute
+  ApiChatRoute: typeof ApiChatRoute
   ChatPeerIdRoute: typeof ChatPeerIdRoute
   CourseCourseIdRoute: typeof CourseCourseIdRoute
 }
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatPeerIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -160,9 +180,19 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   SearchRoute: SearchRoute,
   WishingWellRoute: WishingWellRoute,
+  ApiChatRoute: ApiChatRoute,
   ChatPeerIdRoute: ChatPeerIdRoute,
   CourseCourseIdRoute: CourseCourseIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
