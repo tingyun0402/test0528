@@ -19,7 +19,9 @@ function SwipeHome() {
 
 function LoginGate({ onPass }: { onPass: () => void }) {
   const [email, setEmail] = useState("");
-  const valid = email.endsWith("@mail.shu.edu.tw") || email.endsWith("@shu.edu.tw");
+  const [password, setPassword] = useState("");
+  const validEmail = email.endsWith("@mail.shu.edu.tw") || email.endsWith("@shu.edu.tw");
+  const valid = validEmail && password.length >= 6;
   return (
     <div className="min-h-screen w-full" style={{ background: "var(--gradient-warm)" }}>
       <div className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6">
@@ -38,14 +40,24 @@ function LoginGate({ onPass }: { onPass: () => void }) {
             placeholder="student@mail.shu.edu.tw"
             className="mt-4 w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary"
           />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="密碼（至少 6 碼）"
+            className="mt-3 w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary"
+          />
           <button
             disabled={!valid}
             onClick={onPass}
-            className="mt-4 w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition disabled:opacity-40"
+            className="mt-4 w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition active:scale-[0.97] active:brightness-90 disabled:opacity-40"
           >
             登入 / 註冊
           </button>
-          <button onClick={onPass} className="mt-2 w-full rounded-xl py-2 text-xs text-muted-foreground underline">
+          <button
+            onClick={onPass}
+            className="mt-2 w-full rounded-xl py-2 text-xs text-muted-foreground underline transition active:scale-[0.97]"
+          >
             （Demo 模式：直接體驗）
           </button>
         </div>
@@ -168,14 +180,14 @@ function SwipeDeck() {
         <div className="mt-6 flex justify-center gap-8">
           <button
             onClick={() => finish("pass")}
-            className="grid h-14 w-14 place-items-center rounded-full bg-card text-primary shadow-[var(--shadow-soft)]"
+            className="grid h-14 w-14 place-items-center rounded-full bg-card text-primary shadow-[var(--shadow-soft)] transition-transform duration-100 active:scale-90 active:shadow-inner active:brightness-95"
             aria-label="略過"
           >
             <X className="h-6 w-6" />
           </button>
           <button
             onClick={() => finish("like")}
-            className="grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-card)]"
+            className="grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-card)] transition-transform duration-100 active:scale-90 active:brightness-110"
             aria-label="想換進"
           >
             <Heart className="h-6 w-6 fill-current" />
