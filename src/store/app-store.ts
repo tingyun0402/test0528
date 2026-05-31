@@ -1,15 +1,20 @@
 import { useSyncExternalStore } from "react";
 import { COURSES, OWNED_COURSE_IDS, type Course } from "@/data/courses";
 
+export type ChatMsg = { from: "me" | "peer"; text: string; warn?: boolean; ts: number };
+
 type State = {
   authed: boolean;
-  wantIn: string[];        // course ids 我想換進
-  wantOut: string[];       // course ids 我想換出
-  favorites: string[];     // 收藏/考慮
-  passed: string[];        // 已略過
-  schedule: string[];      // 已加入課表（包含必修/選修/通識）
-  matchedSeen: string[];   // 已看過配對成功彈窗的同學名稱
+  wantIn: string[];
+  wantOut: string[];
+  favorites: string[];
+  passed: string[];
+  schedule: string[];
+  matchedSeen: string[];
+  chats: Record<string, ChatMsg[]>; // peerName -> messages
 };
+
+const STORAGE_KEY = "aizhenke-state-v1";
 
 const initial: State = {
   authed: false,
@@ -19,11 +24,28 @@ const initial: State = {
   passed: [],
   schedule: [...OWNED_COURSE_IDS],
   matchedSeen: [],
+  chats: {},
 };
 
-let state: State = { ...initial };
+function load(): State {
+  if (typeof window === "undefined") return initial;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return initial;
+    return { ...initial, ...JSON.parse(raw) };
+  } catch {
+    return initial;
+  }
+}
+
+let state: State = load();
 const listeners = new Set<() => void>();
-const emit = () => listeners.forEach((l) => l());
+const persist = () => {
+  if (typeof window !== "undefined") {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+};
+const emit = () => { persist(); listeners.forEach((l) => l()); };
 
 export const appStore = {
   get: () => state,
@@ -67,11 +89,20 @@ export const appStore = {
     if (!state.matchedSeen.includes(name)) state.matchedSeen = [...state.matchedSeen, name];
     emit();
   },
+  appendChat: (peer: string, msg: ChatMsg) => {
+    const prev = state.chats[peer] ?? [];
+    state.chats = { ...state.chats, [peer]: [...prev, msg] };
+    emit();
+  },
+  setChat: (peer: string, msgs: ChatMsg[]) => {
+    state.chats = { ...state.chats, [peer]: msgs };
+    emit();
+  },
   resetSwipes: () => { state.passed = []; state.wantIn = []; emit(); },
 };
 
 export const useAppStore = () =>
-  useSyncExternalStore(appStore.subscribe, appStore.get, appStore.get);
+  useSyncExternalStore(appStore.subscribe, appStore.get, () => initial);
 
 export const getCourse = (id: string): Course | undefined =>
   COURSES.find((c) => c.id === id);

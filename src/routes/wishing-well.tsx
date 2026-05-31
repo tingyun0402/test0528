@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
-import { Sparkles, ArrowRightLeft, MessageCircle, X } from "lucide-react";
+import { Sparkles, ArrowRightLeft, MessageCircle, X, MessagesSquare } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Confetti } from "@/components/Confetti";
 import { appStore, useAppStore, getCourse } from "@/store/app-store";
@@ -37,7 +37,20 @@ function WishingWell() {
   return (
     <AppShell title="許願池 · 配對換課">
       <div className="space-y-5 px-5 pt-5">
-        <div className="rounded-2xl bg-primary p-5 text-primary-foreground shadow-[var(--shadow-card)]">
+        <div className="relative rounded-2xl bg-primary p-5 text-primary-foreground shadow-[var(--shadow-card)]">
+          <Link
+            to="/messages"
+            className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-primary-foreground px-3 py-2 text-xs font-bold text-primary shadow-lg transition active:scale-90"
+            aria-label="開啟聊天訊息"
+          >
+            <MessagesSquare className="h-4 w-4" />
+            <span>聊天</span>
+            {Object.keys(state.chats).length > 0 && (
+              <span className="ml-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-success px-1 text-[10px] text-success-foreground">
+                {Object.keys(state.chats).length}
+              </span>
+            )}
+          </Link>
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
             <h2 className="text-lg font-bold">配對成功 {matches.length} 筆</h2>

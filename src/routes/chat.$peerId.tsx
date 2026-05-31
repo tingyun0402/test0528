@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, Send, ShieldAlert, Loader2 } from "lucide-react";
 import { chatReply } from "@/lib/chat.functions";
+import { appStore, useAppStore, type ChatMsg } from "@/store/app-store";
 
 export const Route = createFileRoute("/chat/$peerId")({
   head: () => ({ meta: [{ title: "聊天 · 愛珍課" }] }),
@@ -11,40 +12,49 @@ export const Route = createFileRoute("/chat/$peerId")({
 
 const FORBIDDEN = ["金錢", "錢", "買", "賣", "價錢", "價格", "$", "NT", "付款", "轉帳", "Pay", "pay"];
 
-type Msg = { from: "me" | "peer"; text: string; warn?: boolean };
-
 function Chat() {
   const { peerId } = Route.useParams();
   const router = useRouter();
   const reply = useServerFn(chatReply);
-  const [msgs, setMsgs] = useState<Msg[]>([
-    { from: "peer", text: `嗨！我是 ${peerId}，看到我們配對成功，方便聊聊換課流程嗎？` },
-  ]);
+  const state = useAppStore();
+  const msgs: ChatMsg[] = state.chats[peerId] ?? [];
   const [text, setText] = useState("");
   const [pending, setPending] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, pending]);
+  // Seed initial peer greeting once
+  useEffect(() => {
+    if (!state.chats[peerId]) {
+      appStore.appendChat(peerId, {
+        from: "peer",
+        text: `嗨！我是 ${peerId}，看到我們配對成功，方便聊聊換課流程嗎？`,
+        ts: Date.now(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [peerId]);
+
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs.length, pending]);
 
   const send = async () => {
     const value = text.trim();
     if (!value || pending) return;
     const warn = FORBIDDEN.some((k) => value.includes(k));
-    const nextMsgs: Msg[] = [...msgs, { from: "me", text: value, warn }];
-    setMsgs(nextMsgs);
+    const myMsg: ChatMsg = { from: "me", text: value, warn, ts: Date.now() };
+    appStore.appendChat(peerId, myMsg);
     setText("");
     if (warn) return;
 
     setPending(true);
     try {
-      const history = nextMsgs.map((m) => ({
+      const history = [...msgs, myMsg].map((m) => ({
         role: m.from === "me" ? ("user" as const) : ("assistant" as const),
         content: m.text,
       }));
       const { text: aiText } = await reply({ data: { messages: history, peerName: peerId } });
-      setMsgs((m) => [...m, { from: "peer", text: aiText }]);
-    } catch (e) {
-      setMsgs((m) => [...m, { from: "peer", text: "（AI 暫時無法回覆，等等再試試～）" }]);
+      appStore.appendChat(peerId, { from: "peer", text: aiText, ts: Date.now() });
+    } catch {
+      appStore.appendChat(peerId, { from: "peer", text: "（AI 暫時無法回覆，等等再試試～）", ts: Date.now() });
     } finally {
       setPending(false);
     }
