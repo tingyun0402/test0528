@@ -21,17 +21,18 @@ const otherUsers = [
 function WishingWell() {
   const state = useAppStore();
   const [matched, setMatched] = useState<typeof otherUsers[number] | null>(null);
-  const [dismissed, setDismissed] = useState<string[]>([]);
 
   const matches = useMemo(() => {
     return otherUsers.filter(
-      (u) => state.wantIn.includes(u.out) && state.wantOut.includes(u.in) && !dismissed.includes(u.name)
+      (u) => state.wantIn.includes(u.out) && state.wantOut.includes(u.in)
     );
-  }, [state, dismissed]);
+  }, [state.wantIn, state.wantOut]);
+
+  const unseen = matches.filter((m) => !state.matchedSeen.includes(m.name));
 
   useEffect(() => {
-    if (matches.length > 0 && !matched) setMatched(matches[0]);
-  }, [matches, matched]);
+    if (unseen.length > 0 && !matched) setMatched(unseen[0]);
+  }, [unseen, matched]);
 
   return (
     <AppShell title="許願池 · 配對換課">
