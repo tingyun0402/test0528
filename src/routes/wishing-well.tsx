@@ -117,7 +117,7 @@ function WishingWell() {
       {matched && (
         <MatchModal
           peer={matched}
-          onClose={() => { setDismissed((d) => [...d, matched.name]); setMatched(null); }}
+          onClose={() => { appStore.markMatchedSeen(matched.name); setMatched(null); }}
         />
       )}
     </AppShell>
