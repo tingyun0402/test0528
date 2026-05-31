@@ -5,19 +5,20 @@ type State = {
   authed: boolean;
   wantIn: string[];        // course ids 我想換進
   wantOut: string[];       // course ids 我想換出
+  favorites: string[];     // 收藏/考慮
   passed: string[];        // 已略過
   schedule: string[];      // 已加入課表（包含必修/選修/通識）
+  matchedSeen: string[];   // 已看過配對成功彈窗的同學名稱
 };
 
 const initial: State = {
   authed: false,
-  // Demo: 預設想換進「網站規劃與設計(c1)」、想換出手上的「口語傳播(c3)」
-  // 對應 wishing-well 中 mock 同學「小新」(out: c1, in: c3) → 立即觸發配對成功
   wantIn: ["c1"],
   wantOut: ["c3"],
+  favorites: [],
   passed: [],
-  // 預設手上有必修+選修+一堂通識
   schedule: [...OWNED_COURSE_IDS],
+  matchedSeen: [],
 };
 
 let state: State = { ...initial };
@@ -48,12 +49,22 @@ export const appStore = {
       : [...state.wantIn, id];
     emit();
   },
+  toggleFavorite: (id: string) => {
+    state.favorites = state.favorites.includes(id)
+      ? state.favorites.filter((x) => x !== id)
+      : [...state.favorites, id];
+    emit();
+  },
   addToSchedule: (id: string) => {
     if (!state.schedule.includes(id)) state.schedule = [...state.schedule, id];
     emit();
   },
   removeFromSchedule: (id: string) => {
     state.schedule = state.schedule.filter((x) => x !== id);
+    emit();
+  },
+  markMatchedSeen: (name: string) => {
+    if (!state.matchedSeen.includes(name)) state.matchedSeen = [...state.matchedSeen, name];
     emit();
   },
   resetSwipes: () => { state.passed = []; state.wantIn = []; emit(); },
