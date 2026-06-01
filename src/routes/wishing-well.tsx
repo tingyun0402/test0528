@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
-import { Sparkles, ArrowRightLeft, MessageCircle, X, MessagesSquare } from "lucide-react";
+import { Sparkles, ArrowRightLeft, X, MessagesSquare } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Confetti } from "@/components/Confetti";
 import { appStore, useAppStore, getCourse } from "@/store/app-store";
