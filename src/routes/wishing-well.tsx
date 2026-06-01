@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
-import { Sparkles, ArrowRightLeft, MessageCircle, X, MessagesSquare } from "lucide-react";
+import { Sparkles, ArrowRightLeft, X, MessagesSquare } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Confetti } from "@/components/Confetti";
 import { appStore, useAppStore, getCourse } from "@/store/app-store";
@@ -113,12 +113,7 @@ function WishingWell() {
                       {getCourse(m.out)?.name} ⇄ {getCourse(m.in)?.name}
                     </p>
                   </div>
-                  <Link
-                    to="/chat/$peerId" params={{ peerId: m.name }}
-                    className="rounded-full bg-success px-3 py-1.5 text-xs font-semibold text-success-foreground"
-                  >
-                    <MessageCircle className="mr-1 inline h-3 w-3" />聊聊
-                  </Link>
+                  <span className="rounded-full bg-success/15 px-2 py-1 text-[10px] font-semibold text-success">已配對</span>
                 </li>
               ))}
             </ul>

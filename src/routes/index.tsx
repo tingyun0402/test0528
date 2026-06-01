@@ -69,11 +69,32 @@ function LoginGate({ onPass }: { onPass: () => void }) {
   );
 }
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function SwipeDeck() {
   const state = useAppStore();
+  const [seed, setSeed] = useState(0);
   const deck = useMemo(
-    () => COURSES.filter((c) => !state.passed.includes(c.id) && !state.wantIn.includes(c.id)),
-    [state.passed, state.wantIn]
+    () =>
+      shuffle(
+        COURSES.filter(
+          (c) =>
+            c.kind === "通識" &&
+            c.holders.length > 0 &&
+            !state.passed.includes(c.id) &&
+            !state.wantIn.includes(c.id) &&
+            !state.schedule.includes(c.id),
+        ),
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.passed, state.wantIn, state.schedule, seed],
   );
   const [drag, setDrag] = useState(0);
   const [flying, setFlying] = useState<"like" | "pass" | null>(null);
@@ -145,8 +166,8 @@ function SwipeDeck() {
               <p className="text-base font-semibold">已經滑完囉！</p>
               <p className="mt-1 text-xs text-muted-foreground">到「許願池」查看配對結果</p>
               <button
-                onClick={() => appStore.resetSwipes()}
-                className="mt-4 inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
+                onClick={() => { appStore.resetSwipes(); setSeed((s) => s + 1); }}
+                className="mt-4 inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition active:scale-95"
               >
                 <RotateCcw className="h-3.5 w-3.5" />重新洗牌
               </button>
@@ -220,7 +241,7 @@ function CardFace({ course, drag }: { course: (typeof COURSES)[number]; drag: nu
       <div className="mt-6 grid grid-cols-2 gap-3">
         <Stat label="上課時間" value={course.time} />
         <Stat label="學分" value={`${course.credits} 學分`} />
-        <Stat label="🔥 想丟出" value={`${course.wantToDrop} 人`} highlight />
+        <Stat label="🔥 想丟出" value={`${course.holders.length} 人`} highlight />
         <Stat label="排隊換進" value={`${course.queueing} 人`} />
       </div>
 
@@ -235,12 +256,14 @@ function CardFace({ course, drag }: { course: (typeof COURSES)[number]; drag: nu
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl bg-background/60 p-3 text-[11px]">
-        <p className="text-muted-foreground">目前持有這門課的同學</p>
-        <p className="mt-1 font-semibold text-foreground/85">
-          {course.holders.map((h) => h.nickname).join("、")}
-        </p>
-      </div>
+      {course.holders.length > 0 && (
+        <div className="mt-4 rounded-xl bg-background/60 p-3 text-[11px]">
+          <p className="text-muted-foreground">目前想換出這門課的同學</p>
+          <p className="mt-1 font-semibold text-foreground/85">
+            {course.holders.map((h) => h.nickname).join("、")}
+          </p>
+        </div>
+      )}
 
       <div className="mt-auto flex items-center justify-between text-[11px] text-muted-foreground">
         <span>滑卡瀏覽 · 不影響選課</span>

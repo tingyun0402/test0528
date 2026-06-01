@@ -21,12 +21,13 @@ function SearchPage() {
 
   const results = useMemo(() => {
     return COURSES.filter((c) => {
-      const text = `${c.name}${c.professor}${c.department}`;
+      if (c.kind !== "通識") return false;
+      const text = `${c.name}${c.professor}${c.department}${c.tags.join("")}`;
       if (q && !text.includes(q)) return false;
       if (filters.noGroup && c.needsGroup) return false;
       if (filters.noReport && c.hasReport) return false;
       if (filters.noFee && c.needsExtraFee) return false;
-      if (filters.chill && c.fatigueIndex !== "輕鬆") return false;
+      if (filters.chill && !(c.fatigueIndex === "輕鬆" || c.tags.some((t) => t.includes("甜課")))) return false;
       return true;
     });
   }, [q, filters]);

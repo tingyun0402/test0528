@@ -69,7 +69,7 @@
   --input: oklch(0.88 0.02 210);
   --ring: oklch(0.38 0.14 255);
 
-  --gradient-warm: linear-gradient(160deg, oklch(0.985 0.005 220), oklch(0.91 0.04 160));
+  --gradient-warm: oklch(0.985 0.005 220);
   --shadow-card: 0 12px 40px -12px oklch(0.38 0.14 255 / 0.18);
   --shadow-soft: 0 6px 20px -8px oklch(0.38 0.14 255 / 0.10);
 }
