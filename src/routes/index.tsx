@@ -69,11 +69,32 @@ function LoginGate({ onPass }: { onPass: () => void }) {
   );
 }
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function SwipeDeck() {
   const state = useAppStore();
+  const [seed, setSeed] = useState(0);
   const deck = useMemo(
-    () => COURSES.filter((c) => !state.passed.includes(c.id) && !state.wantIn.includes(c.id)),
-    [state.passed, state.wantIn]
+    () =>
+      shuffle(
+        COURSES.filter(
+          (c) =>
+            c.kind === "通識" &&
+            c.holders.length > 0 &&
+            !state.passed.includes(c.id) &&
+            !state.wantIn.includes(c.id) &&
+            !state.schedule.includes(c.id),
+        ),
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.passed, state.wantIn, state.schedule, seed],
   );
   const [drag, setDrag] = useState(0);
   const [flying, setFlying] = useState<"like" | "pass" | null>(null);
