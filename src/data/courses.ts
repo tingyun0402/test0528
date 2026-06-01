@@ -102,11 +102,16 @@ export const COURSES: Course[] = [
   {
     id: "c8", name: "社群媒體經營", professor: "謝宛庭", department: "傳管系",
     credits: 2, time: "週四 3-4 節", kind: "通識", fatigueIndex: "輕鬆", fatigueScore: 3,
-    tags: ["#實用", "#IG案例", "#不用考試"],
+    tags: ["#實用", "#IG案例", "#不用考試", "#甜課"],
     needsGroup: false, hasReport: true, needsExtraFee: false,
     passRate: 94, failRate: 2,
     wantToDrop: 4, queueing: 19,
-    holders: [{ nickname: "傳管二甲庭瑄", dept: "傳管系" }],
+    holders: [
+      { nickname: "傳管二甲庭瑄", dept: "傳管系" },
+      { nickname: "傳管一乙小雅", dept: "傳管系" },
+      { nickname: "公廣二甲彥廷", dept: "公廣系" },
+      { nickname: "外系生 Leo", dept: "資管系" },
+    ],
     reviews: [{ author: "傳管大二", text: "貼近生活，作業好寫。", rating: 5 }],
   },
   {
