@@ -241,7 +241,7 @@ function CardFace({ course, drag }: { course: (typeof COURSES)[number]; drag: nu
       <div className="mt-6 grid grid-cols-2 gap-3">
         <Stat label="上課時間" value={course.time} />
         <Stat label="學分" value={`${course.credits} 學分`} />
-        <Stat label="🔥 想丟出" value={`${course.wantToDrop} 人`} highlight />
+        <Stat label="🔥 想丟出" value={`${course.holders.length} 人`} highlight />
         <Stat label="排隊換進" value={`${course.queueing} 人`} />
       </div>
 
