@@ -256,12 +256,14 @@ function CardFace({ course, drag }: { course: (typeof COURSES)[number]; drag: nu
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl bg-background/60 p-3 text-[11px]">
-        <p className="text-muted-foreground">目前持有這門課的同學</p>
-        <p className="mt-1 font-semibold text-foreground/85">
-          {course.holders.map((h) => h.nickname).join("、")}
-        </p>
-      </div>
+      {course.holders.length > 0 && (
+        <div className="mt-4 rounded-xl bg-background/60 p-3 text-[11px]">
+          <p className="text-muted-foreground">目前想換出這門課的同學</p>
+          <p className="mt-1 font-semibold text-foreground/85">
+            {course.holders.map((h) => h.nickname).join("、")}
+          </p>
+        </div>
+      )}
 
       <div className="mt-auto flex items-center justify-between text-[11px] text-muted-foreground">
         <span>滑卡瀏覽 · 不影響選課</span>
