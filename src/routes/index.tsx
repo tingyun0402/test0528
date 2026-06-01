@@ -166,8 +166,8 @@ function SwipeDeck() {
               <p className="text-base font-semibold">已經滑完囉！</p>
               <p className="mt-1 text-xs text-muted-foreground">到「許願池」查看配對結果</p>
               <button
-                onClick={() => appStore.resetSwipes()}
-                className="mt-4 inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
+                onClick={() => { appStore.resetSwipes(); setSeed((s) => s + 1); }}
+                className="mt-4 inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition active:scale-95"
               >
                 <RotateCcw className="h-3.5 w-3.5" />重新洗牌
               </button>
