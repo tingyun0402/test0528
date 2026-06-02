@@ -32,9 +32,8 @@ function load(): State {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return initial;
-    // authed 不從 localStorage 還原，每次進站都需登入
-    const { authed: _ignored, ...rest } = JSON.parse(raw);
-    return { ...initial, ...rest, authed: false };
+    const parsed = JSON.parse(raw);
+    return { ...initial, ...parsed };
   } catch {
     return initial;
   }
