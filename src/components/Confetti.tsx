@@ -4,8 +4,8 @@ type Piece = { id: number; left: number; delay: number; color: string; rotate: n
 
 const COLORS = [
   "var(--primary)",    // 深藍
-  "var(--success)",    // 鮮綠
-  "oklch(0.91 0.04 160)",   // 薄荷綠
+  "var(--success)",    // 金黃
+  "#FFFFDF",           // 淺黃
   "oklch(0.82 0.02 220)",   // 淺藍白
 ];
 
