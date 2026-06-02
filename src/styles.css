@@ -37,11 +37,11 @@
 :root {
   --radius: 0.875rem;
 
-  /* Brand palette — 藍綠白 */
+  /* Brand palette — 黃白 */
   --background: oklch(0.985 0.005 220);          /* 白偏藍 */
   --foreground: oklch(0.22 0.04 250);            /* 深藍灰字 */
 
-  --card: oklch(0.91 0.04 160);                  /* 薄荷綠 */
+  --card: #FFFFDF;                               /* 淺黃 */
   --card-foreground: oklch(0.22 0.04 250);
 
   --popover: oklch(0.98 0.01 220);
@@ -50,17 +50,17 @@
   --primary: oklch(0.38 0.14 255);               /* 深藍 */
   --primary-foreground: oklch(0.98 0.005 250);
 
-  --secondary: oklch(0.91 0.04 160);            /* 薄荷綠 */
+  --secondary: #FFFFDF;                          /* 淺黃 */
   --secondary-foreground: oklch(0.22 0.04 250);
 
   --muted: oklch(0.90 0.02 210);
   --muted-foreground: oklch(0.45 0.03 220);
 
-  --accent: oklch(0.91 0.04 160);
+  --accent: #FFFFDF;
   --accent-foreground: oklch(0.22 0.04 250);
 
-  --success: oklch(0.60 0.16 140);                /* 鮮綠 */
-  --success-foreground: oklch(0.98 0.005 250);
+  --success: #E8C547;                            /* 金黃 */
+  --success-foreground: #2D2400;
 
   --destructive: oklch(0.35 0.10 260);           /* 深藍紫 */
   --destructive-foreground: oklch(0.98 0.005 250);
@@ -77,20 +77,20 @@
 .dark {
   --background: oklch(0.985 0.005 220);
   --foreground: oklch(0.22 0.04 250);
-  --card: oklch(0.91 0.04 160);
+  --card: #FFFFDF;
   --card-foreground: oklch(0.22 0.04 250);
   --popover: oklch(0.98 0.01 220);
   --popover-foreground: oklch(0.22 0.04 250);
   --primary: oklch(0.38 0.14 255);
   --primary-foreground: oklch(0.98 0.005 250);
-  --secondary: oklch(0.91 0.04 160);
+  --secondary: #FFFFDF;
   --secondary-foreground: oklch(0.22 0.04 250);
   --muted: oklch(0.90 0.02 210);
   --muted-foreground: oklch(0.45 0.03 220);
-  --accent: oklch(0.91 0.04 160);
+  --accent: #FFFFDF;
   --accent-foreground: oklch(0.22 0.04 250);
-  --success: oklch(0.60 0.16 140);
-  --success-foreground: oklch(0.98 0.005 250);
+  --success: #E8C547;
+  --success-foreground: #2D2400;
   --destructive: oklch(0.35 0.10 260);
   --destructive-foreground: oklch(0.98 0.005 250);
   --border: oklch(0.82 0.03 210);
