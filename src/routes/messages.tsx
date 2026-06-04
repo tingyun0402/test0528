@@ -89,7 +89,7 @@ function Messages() {
                         )}
                       </div>
                       {outName && inName && (
-                        <p className="truncate text-[11px] text-muted-foreground">
+                        <p className="truncate text-[11px] font-bold text-primary">
                           換出 {outName} ⇄ 換進 {inName}
                         </p>
                       )}
