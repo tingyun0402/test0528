@@ -20,7 +20,24 @@ function Chat() {
   const msgs: ChatMsg[] = state.chats[peerId] ?? [];
   const [text, setText] = useState("");
   const [pending, setPending] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState<string | null>(null);
+  const [reportDetail, setReportDetail] = useState("");
+  const [reportSubmitted, setReportSubmitted] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const closeReport = () => {
+    setReportOpen(false);
+    setReportReason(null);
+    setReportDetail("");
+    setReportSubmitted(false);
+  };
+
+  const submitReport = () => {
+    if (!reportReason) return;
+    setReportSubmitted(true);
+  };
+
 
   // Seed initial peer greeting once
   useEffect(() => {
@@ -74,9 +91,10 @@ function Chat() {
             <h1 className="text-sm font-bold">{peerId}</h1>
             <p className="text-[10px] text-success">AI 模擬 · 配對中</p>
           </div>
-          <button className="ml-auto rounded-full p-1.5 text-destructive transition active:scale-90 active:bg-card">
+          <button onClick={() => setReportOpen(true)} className="ml-auto rounded-full p-1.5 text-destructive transition active:scale-90 active:bg-card">
             <AlertTriangle className="h-5 w-5" />
           </button>
+
         </header>
 
         <div className="bg-primary/10 px-4 py-2 text-center text-[11px] text-primary">
@@ -127,6 +145,63 @@ function Chat() {
             </button>
           </div>
         </div>
+
+        {reportOpen && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 px-4 pb-6 sm:items-center" onClick={closeReport}>
+            <div className="w-full max-w-sm rounded-2xl bg-background p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
+              {reportSubmitted ? (
+                <div className="py-6 text-center">
+                  <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-primary/15 text-primary">✓</div>
+                  <p className="text-base font-bold">已送出檢舉</p>
+                  <p className="mt-1 text-xs text-muted-foreground">我們會盡快審核此聊天室。</p>
+                  <button onClick={closeReport} className="mt-4 w-full rounded-full bg-primary py-2 text-sm font-semibold text-primary-foreground active:scale-95">
+                    關閉
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-3 flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
+                    <h2 className="text-base font-bold">檢舉此聊天室</h2>
+                  </div>
+                  <div className="space-y-2">
+                    {["騷擾訊息", "金錢交易", "其他"].map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => setReportReason(r)}
+                        className={`w-full rounded-xl border px-3 py-2 text-left text-sm transition ${
+                          reportReason === r ? "border-primary bg-primary/10 font-semibold text-primary" : "border-border bg-card"
+                        }`}
+                      >
+                        {r}
+                      </button>
+                    ))}
+                  </div>
+                  <textarea
+                    value={reportDetail}
+                    onChange={(e) => setReportDetail(e.target.value)}
+                    placeholder="新增文字敘述（選填）"
+                    rows={3}
+                    className="mt-3 w-full resize-none rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
+                  />
+                  <div className="mt-4 flex gap-2">
+                    <button onClick={closeReport} className="flex-1 rounded-full border border-border py-2 text-sm font-semibold active:scale-95">
+                      取消
+                    </button>
+                    <button
+                      onClick={submitReport}
+                      disabled={!reportReason}
+                      className="flex-1 rounded-full bg-primary py-2 text-sm font-semibold text-primary-foreground active:scale-95 disabled:opacity-50"
+                    >
+                      送出
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
