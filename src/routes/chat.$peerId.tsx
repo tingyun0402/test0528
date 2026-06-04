@@ -91,9 +91,10 @@ function Chat() {
             <h1 className="text-sm font-bold">{peerId}</h1>
             <p className="text-[10px] text-success">AI 模擬 · 配對中</p>
           </div>
-          <button className="ml-auto rounded-full p-1.5 text-destructive transition active:scale-90 active:bg-card">
+          <button onClick={() => setReportOpen(true)} className="ml-auto rounded-full p-1.5 text-destructive transition active:scale-90 active:bg-card">
             <AlertTriangle className="h-5 w-5" />
           </button>
+
         </header>
 
         <div className="bg-primary/10 px-4 py-2 text-center text-[11px] text-primary">
