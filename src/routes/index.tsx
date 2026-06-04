@@ -198,6 +198,10 @@ function SwipeDeck() {
       </div>
 
       {top && (
+        <p className="mt-3 text-center text-[11px] text-muted-foreground">滑卡瀏覽 · 不影響選課</p>
+      )}
+
+      {top && (
         <div className="mt-6 flex justify-center gap-8">
           <button
             onClick={() => finish("pass")}
@@ -265,10 +269,6 @@ function CardFace({ course, drag }: { course: (typeof COURSES)[number]; drag: nu
         </div>
       )}
 
-      <div className="mt-auto flex items-center justify-between text-[11px] text-muted-foreground">
-        <span>滑卡瀏覽 · 不影響選課</span>
-        <span>← 略過 · 想換進 →</span>
-      </div>
 
       {drag > 60 && (
         <div className="pointer-events-none absolute left-5 top-5 rotate-[-12deg] rounded-lg border-4 border-success px-3 py-1 text-lg font-extrabold text-success">
