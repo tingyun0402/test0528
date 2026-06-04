@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, Send, ShieldAlert, Loader2 } from "lucide-react";
+import { ChevronLeft, Send, ShieldAlert, Loader2, AlertTriangle } from "lucide-react";
 import { chatReply } from "@/lib/chat.functions";
 import { appStore, useAppStore, type ChatMsg } from "@/store/app-store";
 
