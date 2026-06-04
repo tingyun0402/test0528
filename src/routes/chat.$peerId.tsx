@@ -20,7 +20,24 @@ function Chat() {
   const msgs: ChatMsg[] = state.chats[peerId] ?? [];
   const [text, setText] = useState("");
   const [pending, setPending] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState<string | null>(null);
+  const [reportDetail, setReportDetail] = useState("");
+  const [reportSubmitted, setReportSubmitted] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const closeReport = () => {
+    setReportOpen(false);
+    setReportReason(null);
+    setReportDetail("");
+    setReportSubmitted(false);
+  };
+
+  const submitReport = () => {
+    if (!reportReason) return;
+    setReportSubmitted(true);
+  };
+
 
   // Seed initial peer greeting once
   useEffect(() => {
