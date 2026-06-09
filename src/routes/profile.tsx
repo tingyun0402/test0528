@@ -196,7 +196,7 @@ function ProfilePage() {
               </button>
               <button
                 onClick={doDrop}
-                className="flex-1 rounded-xl bg-destructive py-2.5 text-sm font-semibold text-destructive-foreground"
+                className="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white"
               >
                 退選
               </button>
