@@ -96,11 +96,11 @@ function ProfilePage() {
                     <span className="font-semibold">{cf.b.name}</span>
                   </p>
                   <div className="mt-2 flex gap-2">
-                    <button onClick={() => appStore.removeFromSchedule(cf.a.id)} className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-primary-foreground">
-                      移除「{cf.a.name}」
+                    <button onClick={() => askDrop(cf.a.id)} className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-primary-foreground">
+                      退選「{cf.a.name}」
                     </button>
-                    <button onClick={() => appStore.removeFromSchedule(cf.b.id)} className="rounded-full bg-primary/80 px-3 py-1 text-[11px] font-semibold text-primary-foreground">
-                      移除「{cf.b.name}」
+                    <button onClick={() => askDrop(cf.b.id)} className="rounded-full bg-primary/80 px-3 py-1 text-[11px] font-semibold text-primary-foreground">
+                      退選「{cf.b.name}」
                     </button>
                   </div>
                 </li>
