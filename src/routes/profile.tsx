@@ -178,8 +178,8 @@ function ProfilePage() {
       {confirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
           <div className="w-full max-w-xs rounded-2xl bg-card p-5 text-center shadow-lg">
-            <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-destructive/15">
-              <AlertCircle className="h-6 w-6 text-destructive" />
+            <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-red-500/15">
+              <AlertCircle className="h-6 w-6 text-red-500" />
             </div>
             <p className="text-sm font-semibold text-foreground">
               按下退選後，此學期便無法修此課程
