@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Fragment, type ReactNode } from "react";
-import { ShieldCheck, Mail, LogOut, AlertTriangle } from "lucide-react";
+import { Fragment, useState, type ReactNode } from "react";
+import { ShieldCheck, Mail, LogOut, AlertTriangle, AlertCircle } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useAppStore, getCourse, appStore } from "@/store/app-store";
 import { detectConflicts, parseSlot, DAY_NAMES, type Course } from "@/data/courses";
