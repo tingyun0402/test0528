@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Fragment, type ReactNode } from "react";
-import { ShieldCheck, Mail, LogOut, AlertTriangle } from "lucide-react";
+import { Fragment, useState, type ReactNode } from "react";
+import { ShieldCheck, Mail, LogOut, AlertTriangle, AlertCircle } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useAppStore, getCourse, appStore } from "@/store/app-store";
 import { detectConflicts, parseSlot, DAY_NAMES, type Course } from "@/data/courses";
@@ -19,6 +19,24 @@ function ProfilePage() {
   const state = useAppStore();
   const courses = state.schedule.map(getCourse).filter((c): c is Course => Boolean(c));
   const conflicts = detectConflicts(courses);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmCourseId, setConfirmCourseId] = useState<string | null>(null);
+  const confirmCourse = confirmCourseId ? getCourse(confirmCourseId) : undefined;
+
+  const askDrop = (id: string) => {
+    setConfirmCourseId(id);
+    setConfirmOpen(true);
+  };
+  const doDrop = () => {
+    if (confirmCourseId) appStore.removeFromSchedule(confirmCourseId);
+    setConfirmOpen(false);
+    setConfirmCourseId(null);
+  };
+  const cancelDrop = () => {
+    setConfirmOpen(false);
+    setConfirmCourseId(null);
+  };
 
   // build grid; mark cells with conflicts
   const grid: Record<string, { id: string; name: string; conflict: boolean } | null> = {};
@@ -78,11 +96,11 @@ function ProfilePage() {
                     <span className="font-semibold">{cf.b.name}</span>
                   </p>
                   <div className="mt-2 flex gap-2">
-                    <button onClick={() => appStore.removeFromSchedule(cf.a.id)} className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-primary-foreground">
-                      移除「{cf.a.name}」
+                    <button onClick={() => askDrop(cf.a.id)} className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-primary-foreground">
+                      退選「{cf.a.name}」
                     </button>
-                    <button onClick={() => appStore.removeFromSchedule(cf.b.id)} className="rounded-full bg-primary/80 px-3 py-1 text-[11px] font-semibold text-primary-foreground">
-                      移除「{cf.b.name}」
+                    <button onClick={() => askDrop(cf.b.id)} className="rounded-full bg-primary/80 px-3 py-1 text-[11px] font-semibold text-primary-foreground">
+                      退選「{cf.b.name}」
                     </button>
                   </div>
                 </li>
@@ -143,11 +161,7 @@ function ProfilePage() {
                     </div>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">{c.time} · {c.credits} 學分</p>
                   </div>
-                  {c.kind === "通識" ? (
-                    <button onClick={() => appStore.removeFromSchedule(c.id)} className="text-[11px] text-primary underline">移除</button>
-                  ) : (
-                    <span className="text-[10px] text-muted-foreground">不可換</span>
-                  )}
+                  <button onClick={() => askDrop(c.id)} className="text-[11px] text-primary underline">退選</button>
                 </li>
               );
             })}
@@ -160,6 +174,36 @@ function ProfilePage() {
           <LogOut className="h-4 w-4" />登出
         </button>
       </div>
+
+      {confirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+          <div className="w-full max-w-xs rounded-2xl bg-card p-5 text-center shadow-lg">
+            <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-red-500/15">
+              <AlertCircle className="h-6 w-6 text-red-500" />
+            </div>
+            <p className="text-sm font-semibold text-foreground">
+              按下退選後，此學期便無法修此課程
+            </p>
+            {confirmCourse && (
+              <p className="mt-1 text-xs text-muted-foreground">{confirmCourse.name}</p>
+            )}
+            <div className="mt-5 flex gap-3">
+              <button
+                onClick={cancelDrop}
+                className="flex-1 rounded-xl bg-muted py-2.5 text-sm font-semibold text-foreground"
+              >
+                返回
+              </button>
+              <button
+                onClick={doDrop}
+                className="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white"
+              >
+                退選
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }
