@@ -20,6 +20,24 @@ function ProfilePage() {
   const courses = state.schedule.map(getCourse).filter((c): c is Course => Boolean(c));
   const conflicts = detectConflicts(courses);
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmCourseId, setConfirmCourseId] = useState<string | null>(null);
+  const confirmCourse = confirmCourseId ? getCourse(confirmCourseId) : undefined;
+
+  const askDrop = (id: string) => {
+    setConfirmCourseId(id);
+    setConfirmOpen(true);
+  };
+  const doDrop = () => {
+    if (confirmCourseId) appStore.removeFromSchedule(confirmCourseId);
+    setConfirmOpen(false);
+    setConfirmCourseId(null);
+  };
+  const cancelDrop = () => {
+    setConfirmOpen(false);
+    setConfirmCourseId(null);
+  };
+
   // build grid; mark cells with conflicts
   const grid: Record<string, { id: string; name: string; conflict: boolean } | null> = {};
   const conflictKeys = new Set<string>();
