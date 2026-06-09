@@ -174,6 +174,36 @@ function ProfilePage() {
           <LogOut className="h-4 w-4" />登出
         </button>
       </div>
+
+      {confirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+          <div className="w-full max-w-xs rounded-2xl bg-card p-5 text-center shadow-lg">
+            <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-destructive/15">
+              <AlertCircle className="h-6 w-6 text-destructive" />
+            </div>
+            <p className="text-sm font-semibold text-foreground">
+              按下退選後，此學期便無法修此課程
+            </p>
+            {confirmCourse && (
+              <p className="mt-1 text-xs text-muted-foreground">{confirmCourse.name}</p>
+            )}
+            <div className="mt-5 flex gap-3">
+              <button
+                onClick={cancelDrop}
+                className="flex-1 rounded-xl bg-muted py-2.5 text-sm font-semibold text-foreground"
+              >
+                返回
+              </button>
+              <button
+                onClick={doDrop}
+                className="flex-1 rounded-xl bg-destructive py-2.5 text-sm font-semibold text-destructive-foreground"
+              >
+                退選
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }
