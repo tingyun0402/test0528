@@ -161,11 +161,7 @@ function ProfilePage() {
                     </div>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">{c.time} · {c.credits} 學分</p>
                   </div>
-                  {c.kind === "通識" ? (
-                    <button onClick={() => appStore.removeFromSchedule(c.id)} className="text-[11px] text-primary underline">移除</button>
-                  ) : (
-                    <span className="text-[10px] text-muted-foreground">不可換</span>
-                  )}
+                  <button onClick={() => askDrop(c.id)} className="text-[11px] text-primary underline">退選</button>
                 </li>
               );
             })}
