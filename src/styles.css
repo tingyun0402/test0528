@@ -53,8 +53,8 @@
   --secondary: #FFFFDF;                          /* 淺黃 */
   --secondary-foreground: oklch(0.22 0.04 250);
 
-  --muted: oklch(0.90 0.02 210);
-  --muted-foreground: oklch(0.45 0.03 220);
+  --muted: oklch(0.84 0.025 230);
+  --muted-foreground: oklch(0.40 0.04 230);
 
   --accent: #FFFFDF;
   --accent-foreground: oklch(0.22 0.04 250);
