@@ -65,11 +65,11 @@
   --destructive: oklch(0.35 0.10 260);           /* 深藍紫 */
   --destructive-foreground: oklch(0.98 0.005 250);
 
-  --border: oklch(0.82 0.03 210);
-  --input: oklch(0.88 0.02 210);
+  --border: oklch(0.74 0.035 230);
+  --input: oklch(0.82 0.03 230);
   --ring: oklch(0.38 0.14 255);
 
-  --gradient-warm: oklch(0.985 0.005 220);
+  --gradient-warm: oklch(0.94 0.012 235);
   --shadow-card: 0 12px 40px -12px oklch(0.38 0.14 255 / 0.18);
   --shadow-soft: 0 6px 20px -8px oklch(0.38 0.14 255 / 0.10);
 }
