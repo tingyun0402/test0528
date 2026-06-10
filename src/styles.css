@@ -38,7 +38,7 @@
   --radius: 0.875rem;
 
   /* Brand palette — 黃白 */
-  --background: oklch(0.985 0.005 220);          /* 白偏藍 */
+  --background: oklch(0.94 0.012 235);           /* 較深的藍灰底，與黃色卡片對比 */
   --foreground: oklch(0.22 0.04 250);            /* 深藍灰字 */
 
   --card: #FFFFDF;                               /* 淺黃 */
